@@ -1,82 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoQuip Decoder</title>
-    <style>
-        .conflict { color: red; }
-    </style>
-</head>
-<body>
-    <h1>CryptoQuip Decoder</h1>
-    
-    <textarea id="encodedMessage" rows="10" cols="50" placeholder="Enter encoded message here..."></textarea>
-    <br>
-    <input type="text" id="inputMapping" placeholder="Input characters">
-    <input type="text" id="outputMapping" placeholder="Output characters">
-    <button onclick="addMapping()">Add Mapping</button>
-    <br>
-    <h2>Mappings</h2>
-    <ul id="mappingsList"></ul>
-    <h2>Decoded Message</h2>
-    <pre id="decodedMessage"></pre>
-
-    <script>
-        let mappings = {};
-
-        function addMapping() {
-            const input = document.getElementById('inputMapping').value.toUpperCase();
-            const output = document.getElementById('outputMapping').value.toUpperCase();
-
-            if (input.length !== output.length || input === '' || output === '') {
-                alert('Input and output mappings must be of equal length and non-empty.');
-                return;
-            }
-
-            for (let i = 0; i < input.length; i++) {
-                if (mappings[input[i]] && mappings[input[i]] !== output[i]) {
-                    mappings[input[i]] = 'CONFLICT';
-                } else {
-                    mappings[input[i]] = output[i];
-                }
-            }
-
-            updateMappingsList();
-            decodeMessage();
-        }
-
-        function removeMapping(char) {
-            delete mappings[char];
-            updateMappingsList();
-            decodeMessage();
-        }
-
-        function updateMappingsList() {
-            const list = document.getElementById('mappingsList');
-            list.innerHTML = '';
-
-            for (const [key, value] of Object.entries(mappings)) {
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `${key} -> ${value} <button onclick="removeMapping('${key}')">Remove</button>`;
-                if (value === 'CONFLICT') {
-                    listItem.classList.add('conflict');
-                }
-                list.appendChild(listItem);
-            }
-        }
-
-        function decodeMessage() {
-            const encodedMessage = document.getElementById('encodedMessage').value.toUpperCase();
-            const decodedMessage = encodedMessage.split('').map(char => {
-                if (mappings[char]) {
-                    return mappings[char] === 'CONFLICT' ? `<span class="conflict">${char}</span>` : mappings[char];
-                }
-                return char.match(/[A-Z]/) ? '*' : char;
-            }).join('');
-
-            document.getElementById('decodedMessage').innerHTML = decodedMessage;
-        }
-    </script>
-</body>
+<html>
+    <head>
+        <title>Index of Experiments</title>
+    </head>
+    <body>
+        TBD
+    </body>
 </html>
