@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats TSV Fixer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <main class="app-shell">
+        <section class="hero">
+            <p class="eyebrow">Ingress utility</p>
+            <h1>Stats TSV Fixer</h1>
+            <p class="lede">
+                Paste corrupted TSV export data, then normalize the spacing back into a proper tab-separated table.
+            </p>
+        </section>
+
+        <section class="card">
+            <label class="field">
+                <span>Input TSV</span>
+                <textarea id="input" rows="12" placeholder="Paste corrupted TSV data here..."></textarea>
+            </label>
+
+            <button id="fixButton" type="button">Correct TSV</button>
+
+            <label class="field">
+                <span>Corrected output</span>
+                <textarea id="output" rows="12" placeholder="Corrected TSV data will appear here..." readonly></textarea>
+            </label>
+        </section>
+    </main>
+</body>
+</html>
