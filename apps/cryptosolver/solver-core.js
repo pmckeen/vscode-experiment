@@ -171,7 +171,7 @@ export function buildHintCandidates(cipherText, mappings, dictionary, limit = 8)
                 unlockedLetters: cipherWord.split("").filter((char) => !mappings[char]).length,
             };
         })
-        .filter((entry) => entry.candidates.length > 0)
+        .filter((entry) => entry.candidates.length > 0 && entry.unlockedLetters > 0)
         .sort((left, right) => {
             if (left.candidates.length !== right.candidates.length) {
                 return left.candidates.length - right.candidates.length;
@@ -181,3 +181,4 @@ export function buildHintCandidates(cipherText, mappings, dictionary, limit = 8)
         })
         .slice(0, limit);
 }
+

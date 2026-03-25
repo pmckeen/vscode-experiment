@@ -54,3 +54,9 @@ test("buildHintCandidates includes constrained word matches", () => {
     assert.deepEqual(hints[0].candidates, ["THIS"]);
     assert.ok(hints.some((hint) => hint.cipherWord === "LV" && hint.candidates.includes("IS")));
 });
+
+test("buildHintCandidates skips fully completed words", () => {
+    const hints = buildHintCandidates("WKLV LV", { W: "T", K: "H", L: "I", V: "S" }, ["THIS", "IS"]);
+    assert.deepEqual(hints, []);
+});
+

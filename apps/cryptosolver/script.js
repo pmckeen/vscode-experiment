@@ -21,6 +21,7 @@ const TESSERACT_MODULE_URL = `https://cdn.jsdelivr.net/npm/tesseract.js@${TESSER
 const TESSERACT_WORKER_URL = `https://cdn.jsdelivr.net/npm/tesseract.js@${TESSERACT_VERSION}/dist/worker.min.js`;
 const TESSERACT_CORE_URL = "https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0";
 const TESSERACT_LANG_URL = `https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@${TESSERACT_DATA_VERSION}/4.0.0`;
+const WORDLIST_URL = "https://cdn.jsdelivr.net/gh/aparrish/wordfreq-en-25000@main/wordfreq-en-25000-log.json";
 
 const encodedMessage = document.getElementById("encodedMessage");
 const decodedWorkspace = document.getElementById("decodedWorkspace");
@@ -63,10 +64,14 @@ const state = {
     cameraStream: null,
     capturedImageUrl: "",
     capturedBlob: null,
+    dictionary: DICTIONARY,
+    dictionarySource: "Local fallback list",
+    dictionaryCount: DICTIONARY.length,
 };
 
 let tesseractModulePromise;
 let ocrWorkerPromise;
+let dictionaryPromise;
 
 function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -117,7 +122,7 @@ function getLettersInPuzzle() {
 }
 
 function getDecodedScore() {
-    return scoreDecodedText(decodeText(state.cipherText, state.mappings, "?"), DICTIONARY);
+    return scoreDecodedText(decodeText(state.cipherText, state.mappings, "?"), state.dictionary);
 }
 
 function setOcrStatus(message) {
@@ -184,6 +189,7 @@ async function startCamera() {
         setOcrStatus("Camera ready");
         renderOcr();
     } catch (error) {
+        console.error("Camera start failed", error);
         setOcrStatus(`Camera unavailable: ${error.message}`);
     }
 }
@@ -284,6 +290,43 @@ async function getOcrWorker() {
     return ocrWorkerPromise;
 }
 
+async function loadExternalDictionary() {
+    if (!dictionaryPromise) {
+        dictionaryPromise = fetch(WORDLIST_URL)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Word list request failed with ${response.status}`);
+                }
+
+                return response.json();
+            })
+            .then((rows) => rows
+                .map((entry) => Array.isArray(entry) ? String(entry[0]).trim().toUpperCase() : "")
+                .filter((word) => /^[A-Z]+$/.test(word)))
+            .then((words) => {
+                if (!words.length) {
+                    throw new Error("Word list returned zero usable words");
+                }
+
+                state.dictionary = words;
+                state.dictionarySource = "wordfreq 25k common words";
+                state.dictionaryCount = words.length;
+                console.info(`Loaded external dictionary: ${state.dictionarySource} (${words.length} words)`);
+                render();
+            })
+            .catch((error) => {
+                state.dictionary = DICTIONARY;
+                state.dictionarySource = "Local fallback list";
+                state.dictionaryCount = DICTIONARY.length;
+                console.error("Falling back to local dictionary", error);
+                render();
+                throw error;
+            });
+    }
+
+    return dictionaryPromise;
+}
+
 async function runOcr() {
     if (!state.capturedBlob || state.ocrRunning) {
         setOcrStatus("Capture a frame before running OCR");
@@ -302,6 +345,7 @@ async function runOcr() {
         ocrResultText.value = state.ocrResult;
         setOcrStatus(state.ocrResult ? "OCR complete" : "OCR finished with no text detected");
     } catch (error) {
+        console.error("OCR failed", error);
         state.ocrResult = "";
         ocrResultText.value = "";
         setOcrStatus(`OCR failed: ${error.message}`);
@@ -339,6 +383,7 @@ function renderSummary() {
         `${usedLetters} cipher letters in play`,
         `${assignedLetters} mappings set`,
         `${decodedScore.recognizedWords}/${decodedScore.totalWords} full words recognized`,
+        `${state.dictionaryCount} dictionary words loaded`,
     ].forEach((text) => {
         const badge = document.createElement("span");
         badge.className = "summary-pill";
@@ -346,7 +391,7 @@ function renderSummary() {
         solveSummary.appendChild(badge);
     });
 
-    recognizedWordSummary.textContent = `${decodedScore.recognizedWords} recognized words`;
+    recognizedWordSummary.textContent = `${decodedScore.recognizedWords} recognized words via ${state.dictionarySource}`;
     compactModeButton.textContent = `Compact mode: ${state.compactMode ? "On" : "Off"}`;
 }
 
@@ -511,11 +556,11 @@ function renderHints() {
         return;
     }
 
-    const hints = buildHintCandidates(state.cipherText, state.mappings, DICTIONARY);
+    const hints = buildHintCandidates(state.cipherText, state.mappings, state.dictionary);
     if (hints.length === 0) {
         const empty = document.createElement("p");
         empty.className = "empty-state";
-        empty.textContent = "No dictionary matches yet. Add a few mappings or try the sample puzzle.";
+        empty.textContent = `No dictionary matches yet from ${state.dictionarySource}. Add a few mappings or try the sample puzzle.`;
         hintList.appendChild(empty);
         return;
     }
@@ -620,9 +665,14 @@ document.addEventListener("keydown", async (event) => {
 loadState();
 populateSamples();
 renderOcr();
+loadExternalDictionary().catch(() => {
+    // The error is already logged and the app has already fallen back.
+});
+
 if (!state.cipherText) {
     setCipherText(SAMPLE_PUZZLES[0].cipherText);
 } else {
     encodedMessage.value = state.cipherText;
     render();
 }
+
