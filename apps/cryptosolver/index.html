@@ -49,15 +49,15 @@
             </article>
 
             <article class="panel panel-tall">
-                <div class="section-heading section-heading-split">
-                    <div>
-                        <h2>Working Grid</h2>
-                        <p>Tap any letter below to focus it in the mapping board.</p>
-                    </div>
-                    <button type="button" class="secondary-button workspace-toggle" id="compactModeButton">Compact mode: Off</button>
+                <div class="section-heading">
+                    <h2>Plaintext Picker</h2>
+                    <p>Used letters show where they are currently assigned. Picking one will swap if needed.</p>
                 </div>
 
-                <div id="decodedWorkspace" class="decoded-workspace" aria-live="polite"></div>
+                <div class="picker-toolbar">
+                    <button type="button" class="secondary-button" id="clearActiveButton">Clear selected mapping</button>
+                </div>
+                <div id="plainPicker" class="plain-picker"></div>
             </article>
         </section>
 
@@ -75,15 +75,15 @@
             </article>
 
             <article class="panel panel-tall">
-                <div class="section-heading">
-                    <h2>Plaintext Picker</h2>
-                    <p>Used letters show where they are currently assigned. Picking one will swap if needed.</p>
+                <div class="section-heading section-heading-split">
+                    <div>
+                        <h2>Working Grid</h2>
+                        <p>Tap any letter below to focus it in the mapping board.</p>
+                    </div>
+                    <button type="button" class="secondary-button workspace-toggle" id="compactModeButton">Compact mode: Off</button>
                 </div>
 
-                <div class="picker-toolbar">
-                    <button type="button" class="secondary-button" id="clearActiveButton">Clear selected mapping</button>
-                </div>
-                <div id="plainPicker" class="plain-picker"></div>
+                <div id="decodedWorkspace" class="decoded-workspace" aria-live="polite"></div>
             </article>
         </section>
 
