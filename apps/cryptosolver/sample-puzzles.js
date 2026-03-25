@@ -9,6 +9,6 @@ export const SAMPLE_PUZZLES = [
         id: "quip-prototype",
         title: "Prototype Puzzle",
         source: "Original repo script",
-        cipherText: "T SAWUORY PWARVC IS CQN PW FRRFO UVRHMTMX VHFRN FQYHW. T XIRAA T'P YRMFHVVW PRMFHVVV SNRSHNRY.",
+        cipherText: "T SAWUORY PWARVC IS CQN PW FRRFO UVRHMTMX VHFRN FQYHW. T XIRAA T'P YRMFHVVW PRMFHVVW SNRSHNRY.",
     },
 ];
