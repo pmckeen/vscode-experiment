@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoEncoder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="app-shell">
+        <section class="hero">
+            <div>
+                <p class="eyebrow">Cipher Studio</p>
+                <h1>CryptoEncoder</h1>
+                <p class="lede">
+                    Enter plain text, shuffle a substitution alphabet, and copy an encoded version to share.
+                </p>
+            </div>
+
+            <div class="hero-card panel">
+                <div class="hero-card-row">
+                    <div>
+                        <strong>Mapping style</strong>
+                        <p>Letters only. Punctuation stays as-is.</p>
+                    </div>
+                    <button type="button" id="shuffleButton">Shuffle cipher</button>
+                </div>
+                <div class="button-row">
+                    <button type="button" class="secondary-button" id="resetButton">Reset</button>
+                    <button type="button" class="secondary-button" id="copyButton">Copy encoded</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="workspace-grid">
+            <article class="panel">
+                <div class="section-heading">
+                    <h2>Plain Message</h2>
+                    <p>Type or paste the text you want to encode.</p>
+                </div>
+                <label class="field" for="plainMessage">
+                    <span>Plain text</span>
+                    <textarea id="plainMessage" rows="10" placeholder="Enter plain text here..."></textarea>
+                </label>
+            </article>
+
+            <article class="panel">
+                <div class="section-heading">
+                    <h2>Encoded Output</h2>
+                    <p>Use the generated substitution alphabet to transform the text.</p>
+                </div>
+                <label class="field" for="encodedMessage">
+                    <span>Cipher text</span>
+                    <textarea id="encodedMessage" rows="10" readonly placeholder="Encoded text will appear here..."></textarea>
+                </label>
+            </article>
+        </section>
+
+        <section class="workspace-grid">
+            <article class="panel">
+                <div class="section-heading">
+                    <h2>Mapping Table</h2>
+                    <p>Each plaintext letter maps to a unique cipher letter.</p>
+                </div>
+                <div id="mappingTable" class="mapping-table"></div>
+            </article>
+
+            <article class="panel">
+                <div class="section-heading">
+                    <h2>Preview</h2>
+                    <p>Inspect the current alphabet shuffle and the decoded line length.</p>
+                </div>
+                <div id="previewStats" class="preview-stats"></div>
+            </article>
+        </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

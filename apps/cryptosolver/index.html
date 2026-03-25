@@ -13,7 +13,7 @@
                 <p class="eyebrow">Puzzle Lab</p>
                 <h1>CryptoQuip Decoder</h1>
                 <p class="lede">
-                    Tap cipher letters, assign plaintext letters, and use dictionary hints when you want a nudge.
+                    Tap cipher letters, assign plaintext letters, open the camera for OCR, and use dictionary hints when you want a nudge.
                 </p>
             </div>
 
@@ -24,6 +24,7 @@
                 </label>
                 <div class="button-row">
                     <button type="button" id="loadSampleButton">Load sample</button>
+                    <button type="button" class="secondary-button" id="openOcrModalButton">Camera OCR</button>
                     <button type="button" class="secondary-button" id="clearMappingsButton">Clear mappings</button>
                 </div>
             </div>
@@ -31,9 +32,12 @@
 
         <section class="workspace-grid">
             <article class="panel panel-tall">
-                <div class="section-heading">
-                    <h2>Puzzle Input</h2>
-                    <p>Paste text from the paper or load a sample puzzle to start.</p>
+                <div class="section-heading section-heading-split">
+                    <div>
+                        <h2>Puzzle Input</h2>
+                        <p>Paste text from the paper, load a sample puzzle, or bring in camera OCR.</p>
+                    </div>
+                    <div id="ocrStatusBadge" class="active-summary">Camera idle</div>
                 </div>
 
                 <label class="field" for="encodedMessage">
@@ -95,6 +99,56 @@
             <div id="hintList" class="hint-list"></div>
         </section>
     </main>
+
+    <div id="ocrModal" class="modal-shell" aria-hidden="true">
+        <div class="modal-backdrop" id="ocrModalBackdrop"></div>
+        <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="ocrModalTitle">
+            <header class="modal-header">
+                <div>
+                    <p class="eyebrow">Camera OCR</p>
+                    <h2 id="ocrModalTitle">Capture a puzzle from the page</h2>
+                    <p class="modal-copy">Aim for straight-on framing with strong contrast and as little glare as possible.</p>
+                </div>
+                <button type="button" class="secondary-button modal-close" id="closeOcrModalButton">Close</button>
+            </header>
+
+            <div class="modal-grid">
+                <section class="camera-card">
+                    <div class="camera-stage" id="cameraStage">
+                        <video id="ocrVideo" class="camera-video" autoplay playsinline muted></video>
+                        <img id="ocrPreview" class="ocr-preview" alt="Captured puzzle preview">
+                        <div id="cameraEmptyState" class="camera-empty">Open the camera to capture a puzzle.</div>
+                    </div>
+
+                    <div class="button-row">
+                        <button type="button" id="startCameraButton">Start camera</button>
+                        <button type="button" class="secondary-button" id="captureFrameButton">Capture frame</button>
+                        <button type="button" class="secondary-button" id="retakeFrameButton">Retake</button>
+                    </div>
+                </section>
+
+                <section class="camera-card">
+                    <div class="section-heading section-heading-split section-heading-slim">
+                        <div>
+                            <h3>OCR result</h3>
+                            <p>Edit the extracted text before importing it if needed.</p>
+                        </div>
+                        <div id="ocrStatus" class="active-summary">Camera idle</div>
+                    </div>
+
+                    <label class="field" for="ocrResultText">
+                        <span>Detected text</span>
+                        <textarea id="ocrResultText" rows="10" placeholder="OCR text will appear here..."></textarea>
+                    </label>
+
+                    <div class="button-row">
+                        <button type="button" id="runOcrButton">Read captured frame</button>
+                        <button type="button" class="secondary-button" id="useOcrTextButton">Use OCR text</button>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
 
     <script type="module" src="script.js"></script>
 </body>
