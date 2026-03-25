@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoQuip Decoder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="app-shell">
+        <section class="hero">
+            <p class="eyebrow">Puzzle Lab</p>
+            <h1>CryptoQuip Decoder</h1>
+            <p class="lede">
+                Map letters, spot conflicts, and decode the message as your clues grow.
+            </p>
+        </section>
+
+        <section class="panel">
+            <label class="field">
+                <span>Encoded message</span>
+                <textarea id="encodedMessage" rows="10" placeholder="Enter encoded message here..."></textarea>
+            </label>
+
+            <div class="mapping-row">
+                <label class="field">
+                    <span>Input characters</span>
+                    <input type="text" id="inputMapping" placeholder="Example: ABC">
+                </label>
+                <label class="field">
+                    <span>Output characters</span>
+                    <input type="text" id="outputMapping" placeholder="Example: XYZ">
+                </label>
+                <button type="button" id="addMappingButton">Add Mapping</button>
+            </div>
+        </section>
+
+        <section class="grid">
+            <article class="panel">
+                <div class="section-heading">
+                    <h2>Mappings</h2>
+                    <p>Conflicts are highlighted in red.</p>
+                </div>
+                <ul id="mappingsList" class="mappings-list"></ul>
+            </article>
+
+            <article class="panel">
+                <div class="section-heading">
+                    <h2>Decoded Message</h2>
+                    <p>Unknown letters appear as asterisks.</p>
+                </div>
+                <pre id="decodedMessage" class="decoded-message"></pre>
+            </article>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
