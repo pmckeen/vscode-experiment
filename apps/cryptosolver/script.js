@@ -1,4 +1,3 @@
-import Tesseract from "./node_modules/tesseract.js/dist/tesseract.esm.min.js";
 import { DICTIONARY } from "./dictionary.js";
 import { SAMPLE_PUZZLES } from "./sample-puzzles.js";
 import {
@@ -14,9 +13,14 @@ import {
     scoreDecodedText,
 } from "./solver-core.js";
 
-const { createWorker, PSM } = Tesseract;
 const STORAGE_KEY = "cryptosolver-state-v1";
 const OCR_WHITELIST = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-'.,!?;: \n";
+const TESSERACT_VERSION = "7.0.0";
+const TESSERACT_DATA_VERSION = "1.0.0";
+const TESSERACT_MODULE_URL = `https://cdn.jsdelivr.net/npm/tesseract.js@${TESSERACT_VERSION}/dist/tesseract.esm.min.js`;
+const TESSERACT_WORKER_URL = `https://cdn.jsdelivr.net/npm/tesseract.js@${TESSERACT_VERSION}/dist/worker.min.js`;
+const TESSERACT_CORE_URL = "https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0";
+const TESSERACT_LANG_URL = `https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@${TESSERACT_DATA_VERSION}/4.0.0`;
 
 const encodedMessage = document.getElementById("encodedMessage");
 const decodedWorkspace = document.getElementById("decodedWorkspace");
@@ -61,6 +65,7 @@ const state = {
     capturedBlob: null,
 };
 
+let tesseractModulePromise;
 let ocrWorkerPromise;
 
 function saveState() {
@@ -244,15 +249,28 @@ async function preprocessCapturedImage(blob) {
     }
 }
 
+async function loadTesseractModule() {
+    if (!tesseractModulePromise) {
+        setOcrStatus("Loading OCR engine from CDN");
+        tesseractModulePromise = import(TESSERACT_MODULE_URL);
+    }
+
+    return tesseractModulePromise;
+}
+
 async function getOcrWorker() {
     if (!ocrWorkerPromise) {
+        const { default: Tesseract } = await loadTesseractModule();
+        const { createWorker, PSM } = Tesseract;
+
         ocrWorkerPromise = createWorker("eng", 1, {
             logger: ({ status, progress }) => {
                 const percent = progress ? ` ${Math.round(progress * 100)}%` : "";
                 setOcrStatus(`${status}${percent}`.trim());
             },
-            workerPath: "./node_modules/tesseract.js/dist/worker.min.js",
-            corePath: "./node_modules/tesseract.js-core",
+            workerPath: TESSERACT_WORKER_URL,
+            corePath: TESSERACT_CORE_URL,
+            langPath: TESSERACT_LANG_URL,
         }).then(async (worker) => {
             await worker.setParameters({
                 tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
@@ -346,9 +364,8 @@ function renderOcr() {
     ocrVideo.classList.toggle("is-visible", cameraActive && !hasCapture);
     ocrPreview.classList.toggle("is-visible", hasCapture);
     cameraEmptyState.classList.toggle("is-hidden", cameraActive || hasCapture);
-
     retakeFrameButton.textContent = hasCapture ? "Clear capture" : "Retake";
-  }
+}
 
 function tokenizeWorkspaceText(text) {
     return text.match(/[A-Z']+[.,!?;:]*|\s+|[^A-Z'\s]+/g) || [];

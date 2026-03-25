@@ -4,8 +4,5 @@
   "type": "module",
   "scripts": {
     "test": "node --test ./tests/solver-core.test.js"
-  },
-  "dependencies": {
-    "tesseract.js": "^7.0.0"
   }
 }
