@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiment Index</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <main class="page">
+        <header class="hero">
+            <p class="eyebrow">vscode-experiment</p>
+            <h1>Small tools, one workspace</h1>
+            <p class="intro">A tiny home page for the browser experiments in this repo.</p>
+        </header>
+
+        <section class="project-grid" aria-label="Projects">
+            <article class="card">
+                <h2>CryptoQuip Decoder</h2>
+                <p>Apply substitution mappings and inspect conflicts while you decode.</p>
+                <a href="../cryptosolver/index.html">Open app</a>
+            </article>
+
+            <article class="card">
+                <h2>Stats TSV Fixer</h2>
+                <p>Convert pasted Ingress stats text into TSV that is easier to reuse.</p>
+                <a href="../stats-fixer/index.html">Open app</a>
+            </article>
+
+            <article class="card">
+                <h2>CryptoQuip CLI</h2>
+                <p>Python prototype kept under <code>tools/cryptoquip-cli</code>.</p>
+                <button type="button" id="copyCommand">Copy run command</button>
+                <p class="command" id="commandPreview">python tools/cryptoquip-cli/main.py</p>
+            </article>
+        </section>
+    </main>
+</body>
+</html>
