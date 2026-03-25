@@ -9,51 +9,93 @@
 <body>
     <main class="app-shell">
         <section class="hero">
-            <p class="eyebrow">Puzzle Lab</p>
-            <h1>CryptoQuip Decoder</h1>
-            <p class="lede">
-                Map letters, spot conflicts, and decode the message as your clues grow.
-            </p>
-        </section>
+            <div>
+                <p class="eyebrow">Puzzle Lab</p>
+                <h1>CryptoQuip Decoder</h1>
+                <p class="lede">
+                    Tap cipher letters, assign plaintext letters, and use dictionary hints when you want a nudge.
+                </p>
+            </div>
 
-        <section class="panel">
-            <label class="field">
-                <span>Encoded message</span>
-                <textarea id="encodedMessage" rows="10" placeholder="Enter encoded message here..."></textarea>
-            </label>
-
-            <div class="mapping-row">
-                <label class="field">
-                    <span>Input characters</span>
-                    <input type="text" id="inputMapping" placeholder="Example: ABC">
+            <div class="hero-actions panel panel-compact">
+                <label class="field field-inline" for="samplePuzzleSelect">
+                    <span>Sample puzzle</span>
+                    <select id="samplePuzzleSelect"></select>
                 </label>
-                <label class="field">
-                    <span>Output characters</span>
-                    <input type="text" id="outputMapping" placeholder="Example: XYZ">
-                </label>
-                <button type="button" id="addMappingButton">Add Mapping</button>
+                <div class="button-row">
+                    <button type="button" id="loadSampleButton">Load sample</button>
+                    <button type="button" class="secondary-button" id="clearMappingsButton">Clear mappings</button>
+                </div>
             </div>
         </section>
 
-        <section class="grid">
-            <article class="panel">
+        <section class="workspace-grid">
+            <article class="panel panel-tall">
                 <div class="section-heading">
-                    <h2>Mappings</h2>
-                    <p>Conflicts are highlighted in red.</p>
+                    <h2>Puzzle Input</h2>
+                    <p>Paste text from the paper or load a sample puzzle to start.</p>
                 </div>
-                <ul id="mappingsList" class="mappings-list"></ul>
+
+                <label class="field" for="encodedMessage">
+                    <span>Encoded message</span>
+                    <textarea id="encodedMessage" rows="8" placeholder="Enter encoded message here..."></textarea>
+                </label>
+
+                <div class="stats-row" id="solveSummary"></div>
             </article>
 
-            <article class="panel">
-                <div class="section-heading">
-                    <h2>Decoded Message</h2>
-                    <p>Unknown letters appear as asterisks.</p>
+            <article class="panel panel-tall">
+                <div class="section-heading section-heading-split">
+                    <div>
+                        <h2>Working Grid</h2>
+                        <p>Tap any letter below to focus it in the mapping board.</p>
+                    </div>
+                    <button type="button" class="secondary-button workspace-toggle" id="compactModeButton">Compact mode: Off</button>
                 </div>
-                <pre id="decodedMessage" class="decoded-message"></pre>
+
+                <div id="decodedWorkspace" class="decoded-workspace" aria-live="polite"></div>
             </article>
+        </section>
+
+        <section class="workspace-grid workspace-grid-bottom">
+            <article class="panel panel-tall">
+                <div class="section-heading section-heading-split">
+                    <div>
+                        <h2>Mapping Board</h2>
+                        <p>Choose a cipher letter, then tap a plaintext letter to assign or swap it.</p>
+                    </div>
+                    <div id="activeMappingSummary" class="active-summary">Select a cipher letter</div>
+                </div>
+
+                <div id="letterBoard" class="letter-board"></div>
+            </article>
+
+            <article class="panel panel-tall">
+                <div class="section-heading">
+                    <h2>Plaintext Picker</h2>
+                    <p>Used letters show where they are currently assigned. Picking one will swap if needed.</p>
+                </div>
+
+                <div class="picker-toolbar">
+                    <button type="button" class="secondary-button" id="clearActiveButton">Clear selected mapping</button>
+                </div>
+                <div id="plainPicker" class="plain-picker"></div>
+            </article>
+        </section>
+
+        <section class="panel hints-panel">
+            <div class="section-heading section-heading-split">
+                <div>
+                    <h2>Assisted Solve</h2>
+                    <p>Dictionary-backed candidate words based on the current mappings.</p>
+                </div>
+                <div id="recognizedWordSummary" class="active-summary">0 recognized words</div>
+            </div>
+
+            <div id="hintList" class="hint-list"></div>
         </section>
     </main>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

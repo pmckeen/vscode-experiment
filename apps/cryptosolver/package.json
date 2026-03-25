@@ -1,0 +1,8 @@
+{
+  "name": "cryptosolver",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test ./tests/solver-core.test.js"
+  }
+}
